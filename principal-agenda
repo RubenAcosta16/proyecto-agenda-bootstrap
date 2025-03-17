@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Bootstrap 5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Agenda</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="container mt-5 text-center">
+        <h2 class="text-center">Agenda de Eventos</h2>
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#eventModal">Agregar Evento</button>
+        <p id="noEventsMessage" class="text-muted text-center">No hay eventos. Agrega uno para comenzar.</p>
+ <!-- Tarjeta de información -->
+ <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div id="infoCard" class="card bg-light mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Agenda con Bootstrap</h5>
+                <p class="card-text">¡Administra tus eventos de manera organizada y eficiente!</p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+        <!-- Carrusel dinámico -->
+        <div id="eventCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+            <div class="carousel-inner" id="carouselContent">
+                <div class="carousel-item active">
+                    <div class="d-flex flex-column justify-content-center align-items-center bg-secondary text-white p-4" style="height: 200px;">
+                        <h5>No hay eventos aún.</h5>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <!-- Modal para agregar/editar eventos -->
+        <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">Agregar/Editar Evento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="eventForm">
+                            <input type="hidden" id="editIndex">
+                            <div class="mb-3">
+                                <label for="eventName" class="form-label">Nombre del Evento</label>
+                                <input type="text" class="form-control" id="eventName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventDate" class="form-label">Fecha del Evento</label>
+                                <input type="date" class="form-control" id="eventDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventDescription" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="eventDescription" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Evento</button>
+                            <button type="button" class="btn btn-danger" id="deleteEvent" style="display: none;">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para manejar eventos dinámicos -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const eventForm = document.getElementById("eventForm");
+            const carouselContent = document.getElementById("carouselContent");
+            const noEventsMessage = document.getElementById("noEventsMessage");
+            const deleteEventBtn = document.getElementById("deleteEvent");
+            let eventos = [];
+            let editIndex = -1;
+
+            eventForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const eventName = document.getElementById("eventName").value;
+                const eventDate = document.getElementById("eventDate").value;
+                const eventDescription = document.getElementById("eventDescription").value;
+
+                if (eventName.trim() === "" || eventDate.trim() === "" || eventDescription.trim() === "") return;
+
+                if (editIndex === -1) {
+                    eventos.push({ name: eventName, date: eventDate, description: eventDescription });
+                } else {
+                    eventos[editIndex] = { name: eventName, date: eventDate, description: eventDescription };
+                    editIndex = -1;
+                }
+
+                actualizarCarousel();
+                document.getElementById("eventModal").querySelector(".btn-close").click();
+                eventForm.reset();
+                deleteEventBtn.style.display = "none";
+            });
+
+            function actualizarCarousel() {
+                carouselContent.innerHTML = "";
+                noEventsMessage.style.display = eventos.length > 0 ? "none" : "block";
+
+                eventos.forEach((evento, index) => {
+                    const item = document.createElement("div");
+                    item.classList.add("carousel-item");
+                    if (index === 0) item.classList.add("active");
+
+                    item.innerHTML = `
+                        <div class="d-flex flex-column justify-content-center align-items-center bg-primary text-white p-4" style="height: 200px; cursor: pointer;" onclick="editarEvento(${index})">
+                            <h5>${evento.name}</h5>
+                            <p><strong>Fecha:</strong> ${evento.date}</p>
+                            <p>${evento.description}</p>
+                        </div>
+                    `;
+
+                    carouselContent.appendChild(item);
+                });
+            }
+
+            window.editarEvento = function(index) {
+                document.getElementById("eventName").value = eventos[index].name;
+                document.getElementById("eventDate").value = eventos[index].date;
+                document.getElementById("eventDescription").value = eventos[index].description;
+                editIndex = index;
+                deleteEventBtn.style.display = "block";
+                document.getElementById("eventModalLabel").textContent = "Editar Evento";
+                new bootstrap.Modal(document.getElementById("eventModal")).show();
+            };
+
+            deleteEventBtn.addEventListener("click", function () {
+                if (editIndex !== -1) {
+                    eventos.splice(editIndex, 1);
+                    actualizarCarousel();
+                    document.getElementById("eventModal").querySelector(".btn-close").click();
+                    eventForm.reset();
+                    editIndex = -1;
+                    deleteEventBtn.style.display = "none";
+                }
+            });
+        });
+    </script>
+<!-- Tooltip de ayuda -->
+<div class="container text-center mt-4">
+    <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="top"
+        title="Haz clic para agregar eventos">Ayuda</button>
+</div>
+
+
+</body>
+
+</html>
