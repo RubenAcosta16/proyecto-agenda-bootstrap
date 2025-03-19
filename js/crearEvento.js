@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
     let editIndex = -1;
 
-    // Cargar eventos del localStorage al iniciar
     actualizarCarousel();
     actualizarTabla();
 
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
             editIndex = -1;
         }
 
-        // Guardar eventos en localStorage
         localStorage.setItem("eventos", JSON.stringify(eventos));
 
         actualizarCarousel();
@@ -67,8 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function actualizarTabla() {
-        eventTableBody.innerHTML = ""; // Limpiar la tabla
-        noEventsTableMessage.style.display = eventos.length > 0 ? "none" : "table-row"; // Mostrar mensaje si no hay eventos
+        eventTableBody.innerHTML = "";
+        noEventsTableMessage.style.display = eventos.length > 0 ? "none" : "table-row";
 
         eventos.forEach((evento, index) => {
             const row = document.createElement("tr");
@@ -97,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.eliminarEvento = function (index) {
         eventos.splice(index, 1);
-        // Actualizar localStorage después de eliminar
         localStorage.setItem("eventos", JSON.stringify(eventos));
         actualizarCarousel();
         actualizarTabla();
@@ -106,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
     deleteEventBtn.addEventListener("click", function () {
         if (editIndex !== -1) {
             eventos.splice(editIndex, 1);
-            // Actualizar localStorage después de eliminar
             localStorage.setItem("eventos", JSON.stringify(eventos));
             actualizarCarousel();
             actualizarTabla();
