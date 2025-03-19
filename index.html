@@ -3,93 +3,159 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eventos</title>
+    <title>Agenda Bootstrap 5</title>
     <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
   <body>
-    <nav>
-      <a href="./pages/crearEvento.html"> Crear evento</a>
-      <a href="./pages/inicio-agenda.html"> Inicio agenda</a>
-      <a href="./pages/principal-agenda.html"> Principal agenda</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Agenda</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Inicio</a>
+            </li>
+            <!-- <li class="nav-item"><a class="nav-link" href="#">Eventos</a></li> -->
+            <li class="nav-item"><a class="nav-link" href="./pages/acercaDe.html">Acerca de</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <div class="container mt-5">
-      <h2>Eventos Guardados</h2>
 
-      <!-- aqui se cargan los eventoooos -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Fecha</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="eventTableBody"></tbody>
-      </table>
+    <!-- Contenedor principal -->
+    <div class="container mt-5 text-center">
+      <h2 class="text-center">Agenda de Eventos</h2>
+      <button
+        class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#eventModal"
+      >
+        Agregar Evento
+      </button>
+      <p id="noEventsMessage" class="text-muted text-center">
+        No hay eventos. Agrega uno para comenzar.
+      </p>
+      <!-- Tarjeta de información -->
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+          <div id="infoCard" class="card bg-light mb-3">
+            <div class="card-body text-center">
+              <h5 class="card-title">Agenda con Bootstrap</h5>
+              <p class="card-text">
+                ¡Administra tus eventos de manera organizada y eficiente!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Carrusel dinámico -->
+    <div id="eventCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+      <div class="carousel-inner" id="carouselContent">
+        <div class="carousel-item active">
+          <div
+            class="d-flex flex-column justify-content-center align-items-center bg-secondary text-white p-4"
+            style="height: 200px"
+          >
+            <h5>No hay eventos aún.</h5>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#eventCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#eventCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </button>
     </div>
 
+    <!-- Modal para agregar/editar eventos -->
     <div
       class="modal fade"
-      id="editModal"
+      id="eventModal"
       tabindex="-1"
-      role="dialog"
-      aria-labelledby="editModalLabel"
+      aria-labelledby="eventModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel">Editar Evento</h5>
+            <h5 class="modal-title" id="eventModalLabel">
+              Agregar/Editar Evento
+            </h5>
             <button
               type="button"
-              class="close"
-              data-dismiss="modal"
+              class="btn-close"
+              data-bs-dismiss="modal"
               aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+            ></button>
           </div>
           <div class="modal-body">
-
-    <!-- este es un form para modificar el evento, que se despliega que puse aqui mero en el index por practicidad -->
-
-            <form id="editForm">
-              <div class="form-group">
-                <label for="editEventName">Nombre del Evento</label>
+            <form id="eventForm">
+              <input type="hidden" id="editIndex" />
+              <div class="mb-3">
+                <label for="eventName" class="form-label"
+                  >Nombre del Evento</label
+                >
                 <input
                   type="text"
                   class="form-control"
-                  id="editEventName"
+                  id="eventName"
                   required
                 />
               </div>
-
-              <div class="form-group">
-                <label for="editEventDescription">Descripción</label>
-                <textarea
-                  class="form-control"
-                  id="editEventDescription"
-                  required
-                ></textarea>
-              </div>
-
-              <div class="form-group">
-                <label for="editEventDate">Fecha del Evento</label>
+              <div class="mb-3">
+                <label for="eventDate" class="form-label"
+                  >Fecha del Evento</label
+                >
                 <input
                   type="date"
                   class="form-control"
-                  id="editEventDate"
+                  id="eventDate"
                   required
                 />
               </div>
-
-              <input type="hidden" id="editIndex" />
+              <div class="mb-3">
+                <label for="eventDescription" class="form-label"
+                  >Descripción</label
+                >
+                <textarea
+                  class="form-control"
+                  id="eventDescription"
+                  required
+                ></textarea>
+              </div>
               <button type="submit" class="btn btn-primary">
-                Guardar Cambios
+                Guardar Evento
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                id="deleteEvent"
+                style="display: none"
+              >
+                Eliminar
               </button>
             </form>
           </div>
@@ -97,10 +163,45 @@
       </div>
     </div>
 
-    <script src="./js/index.js"></script>
+    <!-- Tabla para mostrar eventos -->
+    <div class="container mt-4">
+      <h3 class="text-center">Eventos en la Agenda</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre del Evento</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="eventTableBody">
+          <tr>
+            <td colspan="4" class="text-center" id="noEventsTableMessage">
+              No hay eventos registrados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Tooltip de ayuda -->
+    <!-- <div class="container text-center mt-4">
+      <button
+        type="button"
+        class="btn btn-info"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Haz clic para agregar eventos"
+      >
+        Ayuda
+      </button>
+    </div> -->
+
+    <!-- Script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para manejar eventos dinámicos -->
+    <script src="./js/crearEvento.js"></script>
   </body>
 </html>
